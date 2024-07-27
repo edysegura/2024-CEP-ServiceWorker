@@ -1,10 +1,10 @@
-import getZipCodeDatabase from './database.js';
+import getZipCodeDatabase from './helpers/database.js';
 
 async function getCepData(zipCode) {
   const db = await getZipCodeDatabase();
   let zipCodeData = await db.zipCode.get(zipCode);
   if (zipCodeData) return zipCodeData;
-  const { getFromNetwork } = await import('./install-data.js');
+  const { getFromNetwork } = await import('./install-data/index.js');
   zipCodeData = await getFromNetwork(zipCode);
   return zipCodeData;
 }
@@ -24,7 +24,7 @@ function fillTable(zipCodeData) {
 const linkToInstall = document.querySelector("a[href='#']");
 linkToInstall.addEventListener('click', async () => {
   console.log('install data...');
-  const { installData } = await import('./install-data.js');
+  const { installData } = await import('./install-data/index.js');
   console.log(installData);
   alert('Will install');
   // button.disabled = true;

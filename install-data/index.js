@@ -27,6 +27,14 @@ export function zipCodeMapper(zipCodeData) {
   };
 }
 
+async function getDB() {
+  const { default: getZipCodeDatabase } = await import(
+    '../helpers/database.js'
+  );
+  const db = await getZipCodeDatabase();
+  return db;
+}
+
 export async function installData() {
   const cepList = await extractCEPsOnly();
   const promiseList = await Promise.allSettled(cepList.map(fetchZipCodeData));
@@ -37,14 +45,12 @@ export async function installData() {
   const zipCodeMappedList = zipCodeListData
     .filter(onlyDataWithCEP)
     .map(zipCodeMapper);
-  const { default: getZipCodeDatabase } = await import('./database.js');
-  const db = await getZipCodeDatabase();
+  const db = await getDB();
   return db.zipCode.bulkPut(zipCodeMappedList);
 }
 
 async function saveToLocalDB(zipCodeData) {
-  const { default: getZipCodeDatabase } = await import('./database.js');
-  const db = await getZipCodeDatabase();
+  const db = await getDB();
   db.zipCode.add(zipCodeData).then((result) => console.log('Added ', result));
 }
 
