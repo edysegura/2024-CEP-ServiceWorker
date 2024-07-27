@@ -1,6 +1,13 @@
-self.addEventListener('install', () => {
+self.addEventListener('install', (event) => {
   console.log(`[Service Worker] install event lifecycle!`);
-  self.skipWaiting(); // don't wait for installation just activate it
+  event.waitUntil(
+    caches
+      .open('sw-cache-v1')
+      .then(async (cache) =>
+        cache.put('/images/dog.svg', await fetch('/images/cat.svg'))
+      )
+  );
+  // self.skipWaiting(); // don't wait for installation just activate it
 });
 
 self.addEventListener('activate', () => {
@@ -8,11 +15,8 @@ self.addEventListener('activate', () => {
   return self.clients.claim(); // claim all tabs
 });
 
-self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', async (event) => {
   console.log(`[Service Worker] fetch event lifecycle!`);
-  const url = new URL(event.request.url);
-  if (url.pathname === '/images/dog.svg') {
-    event.respondWith(fetch('/images/cat.svg'));
-  }
-  event.respondWith(fetch(event.request));
+  const response = await caches.match(event.request.url);
+  event.respondWith(response && fetch(event.request));
 });
