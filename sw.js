@@ -15,19 +15,21 @@ self.addEventListener('fetch', async (event) => {
   event.respondWith(cacheFirst(event.request));
 });
 
-const CACHE_VERSION_KEY = 'sw-cache-v1';
+const CACHE_VERSION_KEY = 'sw-cache-v5';
 
 async function installStaticAssets() {
   return caches
     .open(CACHE_VERSION_KEY)
     .then((cache) =>
       cache.addAll([
-        '/',
-        '/index.html',
         'https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.fluid.classless.min.css',
-        '/app.js',
-        '/images/cat.svg',
-        '/images/dog.svg',
+        'https://cdn.jsdelivr.net/npm/dexie@4.0.8/+esm',
+        './',
+        './index.html',
+        './helpers/database.js',
+        './helpers/install-sw.js',
+        './install-data/index.js',
+        './app.js',
       ])
     );
 }
