@@ -4,8 +4,9 @@ self.addEventListener('install', (event) => {
   event.waitUntil(installStaticAssets());
 });
 
-self.addEventListener('activate', () => {
+self.addEventListener('activate', (event) => {
   console.log(`[Service Worker] activate event lifecycle!`);
+  event.waitUntil(cacheCleanup());
   return self.clients.claim(); // claim all tabs
 });
 
@@ -29,6 +30,14 @@ async function installStaticAssets() {
         '/images/dog.svg',
       ])
     );
+}
+
+async function cacheCleanup() {
+  const cacheKeys = await caches.keys();
+  const outdatedCache = (cacheKey) => cacheKey !== CACHE_VERSION_KEY;
+  const purge = (cacheKey) => caches.delete(cacheKey);
+  cacheKeys.filter(outdatedCache).forEach(purge);
+  return true;
 }
 
 async function cacheFirst(request) {
