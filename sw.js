@@ -1,20 +1,7 @@
 self.addEventListener('install', (event) => {
   console.log(`[Service Worker] install event lifecycle!!`);
   self.skipWaiting(); // don't wait for installation just activate it
-  event.waitUntil(
-    caches
-      .open('sw-cache-v1')
-      .then(async (cache) =>
-        cache.addAll([
-          '/',
-          '/index.html',
-          'https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.fluid.classless.min.css',
-          './app.js',
-          '/images/cat.svg',
-          '/images/dog.svg',
-        ])
-      )
-  );
+  event.waitUntil(installStaticAssets());
 });
 
 self.addEventListener('activate', () => {
@@ -27,8 +14,25 @@ self.addEventListener('fetch', async (event) => {
   event.respondWith(cacheFirst(event.request));
 });
 
+const CACHE_VERSION_KEY = 'sw-cache-v1';
+
+async function installStaticAssets() {
+  return caches
+    .open(CACHE_VERSION_KEY)
+    .then((cache) =>
+      cache.addAll([
+        '/',
+        '/index.html',
+        'https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.fluid.classless.min.css',
+        '/app.js',
+        '/images/cat.svg',
+        '/images/dog.svg',
+      ])
+    );
+}
+
 async function cacheFirst(request) {
-  const cache = await caches.open('sw-cache-v1');
+  const cache = await caches.open(CACHE_VERSION_KEY);
   const response = await cache.match(request);
   if (response) {
     return response;
