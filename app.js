@@ -1,4 +1,5 @@
 import getZipCodeDatabase from './helpers/database.js';
+import registerServiceWorker from './helpers/install-sw.js';
 
 async function getCepData(zipCode) {
   const db = await getZipCodeDatabase();
@@ -47,6 +48,8 @@ form.addEventListener('submit', async (event) => {
   setLoading(false);
   fillTable(zipCodeData);
 });
+
+registerServiceWorker();
 
 // TODO: improve this code, use class such as HTMLService, ZipCodeService and so on
 // TODO: format CEP data to show in the table
