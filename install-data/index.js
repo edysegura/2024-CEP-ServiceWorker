@@ -1,5 +1,8 @@
 async function extractCEPsOnly() {
   const response = await fetch('./CEPs.txt');
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
   const textData = await response.text();
   const lines = textData.split('\n');
   const extractCEP = (line) => line.split(';')[3];
