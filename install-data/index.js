@@ -1,5 +1,6 @@
 async function extractCEPsOnly() {
-  const response = await fetch('./CEPs.txt');
+  const cepResource = new URL('./CEPs.txt', import.meta.url);
+  const response = await fetch(cepResource);
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
@@ -11,7 +12,7 @@ async function extractCEPsOnly() {
 }
 
 export async function fetchZipCodeData(zipCode) {
-  await new Promise((resolve) => setTimeout(resolve, 400));
+  // await new Promise((resolve) => setTimeout(resolve, 400));
   // const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
   const response = await fetch(
     `https://brasilapi.com.br/api/cep/v1/${zipCode}`
