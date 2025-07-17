@@ -23,15 +23,16 @@ function fillTable(zipCodeData) {
 }
 
 const linkToInstall = document.querySelector("a[href='#']");
+const button = document.querySelector("button[type='submit']");
 linkToInstall.addEventListener('click', async () => {
   console.log('install data...');
   const { installData } = await import('./install-data/index.js');
-  console.log(installData);
-  alert('Will install');
-  // button.disabled = true;
-  // button.setAttribute('aria-busy', true);
-  // await installData();
-  // button.removeAttribute('aria-busy');
+  button.disabled = true;
+  button.setAttribute('aria-busy', true);
+  await installData();
+  button.removeAttribute('aria-busy');
+  console.log('finish install...');
+  button.disabled = false;
 });
 
 function setLoading(isLoading) {
