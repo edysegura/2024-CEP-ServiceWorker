@@ -12,11 +12,11 @@ async function extractCEPsOnly() {
 }
 
 export async function fetchZipCodeData(zipCode) {
-  // await new Promise((resolve) => setTimeout(resolve, 400));
-  // const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-  const response = await fetch(
-    `https://brasilapi.com.br/api/cep/v1/${zipCode}`
-  );
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  const response = await fetch(`https://viacep.com.br/ws/${zipCode}/json/`);
+  // const response = await fetch(
+  //   `https://brasilapi.com.br/api/cep/v1/${zipCode}`
+  // );
   return response.json();
 }
 
